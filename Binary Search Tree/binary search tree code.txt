@@ -1,0 +1,510 @@
+#include<iostream>
+#include<conio.h>
+using namespace std;
+ 
+class Node
+{
+public:
+	int data;
+	Node* left = NULL,
+		* right = NULL;
+		
+};
+
+class BST
+{
+	Node* root;
+public:
+	BST()
+	{
+		root = NULL;
+	}
+
+	Node* get_root()
+	{
+		return root;
+	}
+
+
+	void insertion(int);
+	void  deletetion(int);
+	void search(int);
+	void dispaly_preorder(Node*);
+	void dispaly_postorder(Node*);
+	void dispaly_inorder(Node*);
+	void minimum_value(Node*);
+	void maximum_value(Node*);
+
+
+
+};
+
+void BST:: insertion(int value)
+{
+	
+	Node* newnode = new Node();
+	newnode->data = value;
+	if (root == NULL)
+	{
+		root = newnode;
+		return;
+	}
+
+	else
+	{
+		Node* temp = root;
+		while (temp != NULL)
+		{
+			if (value > temp->data)
+			{
+				if (temp->right == NULL)
+				{
+					temp->right = newnode;
+					return;
+				}
+				temp = temp->right;
+
+			}
+
+			else
+			{
+				if (temp->left == NULL)
+				{
+					temp->left = newnode;
+					return;
+				}
+				temp = temp->left;
+			}
+		}
+		
+
+	}
+}
+void BST::search(int val)
+{
+	Node* temp = root;
+	if (root == NULL)
+	{
+		cout << "Tree is empty " << endl;
+	}
+	else
+	{
+		while (temp != NULL)
+		{
+			if (val == temp->data)
+			{
+				cout << "\n\t\t\tYour value is : ";
+				cout << temp->data << endl;
+				return;
+			}
+			else if (val < temp->data)
+			{
+				
+				temp = temp->left;
+			}
+			else
+			{
+				temp = temp->right;
+			}
+
+			if (temp == NULL)
+			{
+				cout << "\nValue not found " << endl;
+				return;
+			}
+		}
+	}
+
+}
+
+void BST::deletetion(int val)
+{
+	Node* temp = root;
+	
+	if (root == NULL)
+	{
+		cout << "Tree is empty " << endl;
+	}
+	else
+	{
+		Node* parent = root;
+		while (temp != NULL)
+		{
+			if (val == temp->data)
+			{
+				break;
+			}
+			else if (val < temp->data)
+			{
+				parent = temp;
+				temp = temp->left;
+			}
+			else
+			{
+				parent = temp;
+
+				temp = temp->right;
+			}
+
+			if (temp == NULL)
+			{
+				cout << "\nValue not found " << endl;
+				return;
+			}
+		}
+
+
+		if (temp->left == NULL && temp->right == NULL)      //for leaf
+		{
+			if (temp == root)
+			{
+				root = NULL;
+			}
+			else if(parent->left==temp)
+			{
+				parent->left = NULL;
+			}
+
+			else
+			{
+				parent->right = NULL;
+			}
+
+			delete temp;
+
+			cout << "\n\n\t\t\tNUMBER IS DELETED SUCCESSFULLY!!\n";
+
+		}
+
+		else if (temp->left == NULL || temp->right == NULL)          //for single child
+		{
+			if (temp->left == NULL)
+			{
+				if (temp == root)
+				{
+					root = temp->right;
+				}
+
+				else if (parent->left == temp)
+				{
+					parent->left = temp->right;
+				}
+				else
+				{
+					parent->right = temp->right;
+				}
+				delete temp;
+			}
+
+			else
+			{
+				if (temp == root)
+				{
+					root = temp->left;
+				}
+
+				else if (parent->left == temp)
+				{
+					parent->left = temp->left;
+				}
+				else
+				{
+					parent->right = temp->left;
+				}
+				delete temp;
+			}
+			cout << "\n\n\t\t\tNUMBER IS DELETED SUCCESSFULLY!!\n";
+
+		}
+
+		else       // for two childs
+		{
+			Node* temp2 = temp->right;
+			Node* p= NULL;
+
+		
+				while (temp2->left != NULL)   //inorder successor
+				{
+					p = temp2;
+					temp2 = temp2->left;
+				}
+
+				temp->data = temp2->data;
+
+				if (temp2->left == NULL && temp2->right == NULL)      //for leaf
+				{
+					
+					if (p->left == temp2)
+					{
+						p->left = NULL;
+					}
+
+					else
+					{
+						p->right = NULL;
+					}
+
+					delete temp2;
+
+					cout << "\n\n\t\t\tNUMBER IS DELETED SUCCESSFULLY!!\n";
+
+				}
+
+				else if (temp2->left == NULL || temp2->right == NULL)          //for single child
+				{
+					if (temp2->left == NULL)
+					{
+						if (temp2 == root)
+						{
+							root = temp2->right;
+						}
+
+						else if (p->left == temp2)
+						{
+							p->left = temp2->right;
+						}
+						else
+						{
+							p->right = temp2->right;
+						}
+						delete temp2;
+					}
+
+					else
+					{
+						if (temp2 == root)
+						{
+							root = temp->left;
+						}
+
+						else if (p->left == temp2)
+						{
+							p->left = temp2->left;
+						}
+						else
+						{
+							p->right = temp2->left;
+						}
+						delete temp2;
+					}
+					cout << "\n\n\t\t\tNUMBER IS DELETED SUCCESSFULLY!!\n";
+
+				}
+		}
+			
+		
+
+	}
+
+}
+
+
+void BST::dispaly_preorder(Node* temp)    // PLR
+{
+	if (root == NULL)
+	{
+		cout << "\n\t\tTree is empty " << endl;
+	}
+	else 
+	{
+		if (temp == NULL) 
+		{
+			return;
+		}
+		cout << temp->data << " ";
+		dispaly_preorder(temp->left);
+		dispaly_preorder(temp->right);
+		
+    }
+}
+void BST::dispaly_postorder(Node* temp)          //LRP
+{
+	if (root == NULL)
+	{
+		cout << "\n\t\tTree is empty " << endl;
+	}
+	else if (temp != NULL)
+	{
+		
+		dispaly_postorder(temp->left);
+		
+		dispaly_postorder(temp->right);
+		cout << temp->data << " ";
+	}
+}
+
+void BST::dispaly_inorder(Node* temp)    //LPR
+{
+	if (root == NULL)
+	{
+		cout << "\n\t\tTree is empty " << endl;
+		return;
+	}
+	else 
+	{
+		if (temp == NULL)
+		{
+			return;
+		}
+		dispaly_inorder(temp->left);
+		cout << temp->data << " ";
+		dispaly_inorder(temp->right);
+
+		
+	}
+}
+	
+
+void BST::maximum_value(Node* temp)
+{
+	if (root == NULL)
+	{
+		cout << "\n\t\tTree is empty " << endl;
+		return;
+	}
+	else
+	{
+		while (temp->right != NULL)
+		{
+
+			temp = temp->right;
+			if (temp->right == NULL)
+			{
+				cout << temp->data << endl;
+				return;
+			}
+
+
+		}
+
+		cout << temp->data << endl;
+		return;
+	}
+
+
+}
+
+
+void BST::minimum_value(Node* temp)
+{
+	if (root == NULL)
+	{
+		cout << "\n\t\tTree is empty " << endl;
+		return;
+	}
+	else
+	{
+		while (temp->left != NULL)
+		{
+
+			temp = temp->left;
+			if (temp->left == NULL)
+			{
+				cout << temp->data << endl;
+				return;
+			}
+
+
+		}
+
+		cout << temp->data << endl;
+		return;
+	}
+
+
+}
+
+
+
+int main()
+{
+	BST k;
+	
+	L1:
+	system("cls");
+	int ch;
+
+	cout << "1.INSERTION\n";
+	cout << "2.PRE-ORDER DISPLAY\n";
+	cout << "3.POST-ORDER DISPLAY\n";
+	cout << "4.IN-ORDER DISPLAY\n";
+	cout << "5.MINIMUM NUMBER\n";
+	cout << "6.MAXIMUM NUMBER\n";
+	cout << "7.SEARCH NUMBER\n";
+	cout << "8.DELETION \n";
+    cout << "9.EXIT\n\n";
+
+	cout << "\nPlease enter a number : ";
+	cin >> ch;
+
+	switch (ch)
+	{
+	case 1:
+		int val1;
+		cout << "\nEnter a number you want to insert :";
+		cin >> val1;
+		k.insertion(val1);
+
+		cout << "\n\t\t\tYour value is inserted\n\n";
+
+
+		break;
+	case 2:
+		cout << "\nPRE-ORDER DISPALY\n";
+		k.dispaly_preorder(k.get_root());
+		cout << endl;
+
+		
+		break;
+	case 3:
+		cout << "\nPOST-ORDER DISPALY\n";
+
+		k.dispaly_postorder(k.get_root());
+		cout << endl;
+		break;
+	case 4:
+		cout << "\nIN-ORDER DISPALY\n";
+
+		k.dispaly_inorder(k.get_root());
+		cout << endl;
+		break;
+	case 5:
+		cout << "\nMINIMUM NUMBER IS :  ";
+
+		k.minimum_value(k.get_root());
+		break;
+	case 6:
+		cout << "\nMAXIMUM NUMBER IS :  ";
+
+		k.maximum_value(k.get_root());
+		break;
+	case 7:
+		int val2;
+		cout << "\nEnter a number you want to search :";
+		cin >> val2;
+		k.search(val2);
+		cout << endl;
+		break;
+	case 8:
+		int val;
+		cout << "\nEnter a number you want to delete :";
+		cin >> val;
+		k.deletetion(val);
+		break;
+	case 9:
+		exit(0);
+		break;
+	default:
+		cout << "\n \t\t\tYou entered a wrong number!!!\n";
+	}
+
+
+	cout << "\n\t\t\tPress any key to continue....";
+	_getch();
+
+	goto L1;
+	
+	
+	
+	
+}
